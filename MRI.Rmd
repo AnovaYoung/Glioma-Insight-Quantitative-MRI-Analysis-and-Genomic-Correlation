@@ -1,0 +1,145 @@
+
+```{r}
+zip_file_path <- "/Users/anovayoungers/Downloads/archive (3).zip"
+
+extraction_path <- "/Users/anovayoungers/Documents/MRI_Data"  # Adjust this as necessary
+
+if (!dir.exists(extraction_path)) {
+  dir.create(extraction_path)
+}
+
+
+unzip(zip_file_path, exdir = extraction_path)
+
+paste("Files extracted to:", extraction_path)
+
+```
+
+```{r}
+list.files(path = "/Users/anovayoungers/Library/CloudStorage/OneDrive-Personal/MRI_Data")
+
+```
+
+```{r}
+# files in the 'kaggle_3m' directory
+list.files(path = "/Users/anovayoungers/Library/CloudStorage/OneDrive-Personal/MRI_Data/kaggle_3m")
+
+# 'lgg-mri-segmentation'
+list.files(path = "/Users/anovayoungers/Library/CloudStorage/OneDrive-Personal/MRI_Data/lgg-mri-segmentation")
+
+```
+
+```{r}
+data_file_path <- file.path(extraction_path, "lgg-mri-segmentation", "data.csv")
+if (!file.exists(data_file_path)) {
+  stop("The file does not exist in the specified path: ", data_file_path)
+}
+
+
+```
+```{r}
+list.files(extraction_path) 
+
+list.files(file.path(extraction_path, "lgg-mri-segmentation"))
+
+
+```
+
+
+```{r}
+segmentation_files <- list.files(file.path(extraction_path, "lgg-mri-segmentation"))
+print(segmentation_files)
+
+```
+
+```{r}
+kaggle_files <- list.files(file.path(extraction_path, "kaggle_3m"))
+print(kaggle_files)
+
+```
+
+```{r}
+data_file_path <- file.path(extraction_path, "kaggle_3m", "data.csv")
+data <- read.csv(data_file_path)
+head(data)
+```
+
+1. **Patient**: This column contains identifiers for patients who have undergone MRI for brain tumor analysis.
+
+2. **RNASeqCluster**: An integer representing a cluster assignment from RNA sequencing data. Clustering in this context is likely based on gene expression profiles, where similar expression patterns are grouped together.
+
+3. **MethylationCluster**: This indicates a cluster assignment based on DNA methylation patterns. DNA methylation is a process that can affect gene expression and is often studied in cancer to understand regulatory changes.
+
+4. **miRNACluster**: A cluster assignment from microRNA (miRNA) sequencing data. miRNAs are small non-coding RNAs that can regulate gene expression post-transcriptionally, and their patterns can be important in cancer.
+
+5. **CNCluster**: I believe this stands for Copy Number Cluster. Copy number variations (CNVs) are changes in the number of copies of a particular gene and can be significant in cancer genomics.
+
+6. **RPPACluster**: This could refer to clusters derived from Reverse Phase Protein Array (RPPA) data, a proteomics technique used to measure the levels of proteins and their post-translational modifications.
+
+The `<chr>` and `<int>` are data types indicating character strings and integers respectively. The "NA" values represent missing data for those particular patients in the respective columns.
+
+This data frame comes from an oncological study where each patient's tumor sample was analyzed using different molecular profiling techniques to classify them into biologically meaningful groups. Each cluster correspond to different tumor subtypes or prognostic groups that could influence the treatment decision or provide insights into the underlying biology of the tumors.
+
+In a more concise summary, the data shown reflects a multi-dimensional approach to classifying tumor samples based on various molecular data, which is a common practice in the field of cancer genomics known as multi-omics.
+
+
+```{r}
+summary(data)
+```
+
+**Patient**: The dataset contains information on 110 patients. The Patient column is character data, representing individual identifiers for each patient.
+
+**RNASeqCluster**: There are 110 values ranging from 1 to 4, with a mean cluster assignment of approximately 2.45. Eighteen values are missing (NA).
+
+**MethylationCluster**: Ranges from 1 to 5, with a median and mode of 4, indicating that the most common methylation profile cluster assignment is 4. There is one missing value.
+
+**miRNACluster**: Values range from 1 to 4, with a mean of 1.9 and a median of 2, suggesting a slight skew towards lower cluster numbers. No missing values.
+
+**CNCluster**: Copy Number Cluster data ranges from 1 to 3, with most data points (median) being 1. There are two missing values.
+
+**RPPACluster**: Ranges from 1 to 4, with a mean of approximately 2.37 and a median of 2, indicating a moderate average cluster assignment. Twelve values are missing.
+
+**OncosignCluster**: Values range from 1 to 3, with most patients being in clusters 1 or 2 (mean approximately 1.895), and five values are missing.
+
+**COCCluster**: Ranges from 1 to 3 with most patients in cluster 1 (mean approximately 1.764), and one value is missing.
+**histological_type**: This seems to have only one value (1), indicating possibly a single histological type across the dataset or an error in data entry.
+
+neoplasm_histologic_grade, tumor_tissue_site, laterality, tumor_location, gender, age_at_initial_pathologic, race, ethnicity, and death01 have various ranges and distributions that are not fully displayed in the screenshot but seem to represent different categorical and numerical clinical features of the patients, with some missing data in each.
+Notably, death01 appears to be a binary or categorical variable indicating mortality status, with a mean of approximately 0.2477, suggesting that fewer patients in this dataset have a death event compared to those who are alive or where death is not applicable.
+
+```{r}
+str(data)
+
+table(data$RNASeqCluster)
+table(data$MethylationCluster)
+table(data$miRNACluster)
+table(data$CNCluster)
+table(data$RPPACluster)
+
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
