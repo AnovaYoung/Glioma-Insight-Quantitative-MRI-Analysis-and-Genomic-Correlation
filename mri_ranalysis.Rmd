@@ -1,0 +1,132 @@
+---
+title: "MRI Segmentation Analysis"
+author: "Anova Youngers"
+date: "`r Sys.Date()`"
+output: html_document
+---
+```{r}
+if (!require("utils")) install.packages("utils")
+if (!require("tidyverse")) install.packages("tidyverse")
+library(utils)     # this is unzip function
+library(tidyverse) # for data manipulation
+
+```
+```{r}
+zip_file_path <- "/Users/manov/Downloads/archive.zip"
+extraction_path <- "/Users/manov/Downloads/MRI_Analysis"
+unzip(zip_file_path, exdir = extraction_path)
+cat("Files successfully unzipped to", extraction_path, "\n")
+```
+```{r}
+list.files(path = paste0(extraction_path, "/kaggle_3m"))
+```
+```{r}
+list.files(path = paste0(extraction_path, "/lgg-mri-segmentation"))
+```
+kaggle_3m Directory: This directory appears to contain subdirectories named according to the patient or case IDs (like TCGA_CS_4941_19960909, TCGA_CS_4942_19970222, etc.). Each of these subdirectories likely contains the MRI images and perhaps segmentation masks related to that specific patient. There are a total of 110 data entries listed, corresponding to individual patients. 1 line of headers.
+lgg-mri-segmentation Directory: It looks like this directory contains a reference back to the kaggle_3m directory, lgg-mri-segmentation may just be a root directory.
+
+
+To get a sense of the types of files stored for each patient and how they're formatted, I'm going to explore one patient's directory:
+
+
+```{r}
+patient_dir_path <- paste0(extraction_path, "/kaggle_3m/TCGA_CS_4941_19960909/")
+
+# contents of this patient's directory
+patient_files <- list.files(patient_dir_path)
+print(patient_files)
+
+
+```
+
+```{r}
+R.version.string
+
+```
+
+```{r}
+# Create a personal library 
+if (!file.exists(Sys.getenv("R_LIBS_USER"))) {
+  dir.create(Sys.getenv("R_LIBS_USER"), recursive = TRUE)
+}
+
+# Specify the personal library path explicitly when installing
+if (!requireNamespace("EBImage", quietly = TRUE)) {
+  BiocManager::install("EBImage", lib = Sys.getenv("R_LIBS_USER"))
+}
+
+# load EBImage to confirm it's installed properly
+library(EBImage, lib.loc = Sys.getenv("R_LIBS_USER"))
+
+# checking if EBImage is loaded
+if ("EBImage" %in% loadedNamespaces()) {
+  cat("EBImage is successfully installed and loaded!\n")
+} else {
+  cat("Failed to load EBImage.\n")
+}
+
+```
+
+
+```{r}
+# Define the root path where the files are located
+extraction_path <- "/Users/manov/Downloads/MRI_Analysis"
+
+# Specific patient directory
+patient_dir_path <- paste0(extraction_path, "/kaggle_3m/TCGA_CS_4941_19960909/")
+
+# List files in the patient directory to verify paths
+patient_files <- list.files(patient_dir_path, full.names = TRUE)
+print(patient_files)
+
+example_image_path <- paste0(patient_dir_path, "TCGA_CS_4941_19960909_1.tif")
+example_mask_path <- paste0(patient_dir_path, "TCGA_CS_4941_19960909_1_mask.tif")
+
+if (file.exists(example_image_path) && file.exists(example_mask_path)) {
+  cat("Both files exist and paths are correct.\n")
+} else {
+  cat("Check failed: One or both files do not exist. Check paths.\n")
+}
+
+
+
+```
+
+```{r}
+image <- readImage(example_image_path)
+mask <- readImage(example_mask_path)
+
+# Display the image and the mask
+if (!is.null(image) && !is.null(mask)) {
+  par(mfrow = c(1, 2))  # Set up the plotting area to show images side by side
+  display(image, method = "raster", main = "MRI Image")
+  display(mask, method = "raster", main = "Segmentation Mask")
+  cat("Images successfully loaded and displayed.\n")
+} else {
+  cat("Failed to load images: They are NULL.\n")
+}
+
+```
+
+What are we seeing? 
+***Image Analysis and definition***:
+
+Above is a colored overlay of a brain MRI scan with a segmentation mask. In medical imaging, segmentation is a process used to delineate regions of interest—like abnormalities or specific anatomical structures—within the images. Here’s what the colors represent:
+
+- **The original MRI scan**: Typically shown in grayscale, this scan provides the detailed structure of the brain in what appears to be yellow.
+- **The segmentation mask**: Highlighted in red color, this layer indicates areas of interest. For brain MRIs, such areas often include lesions, tumors, or areas of tissue abnormality.
+
+The segmentation mask is often created manually by experts or generated automatically by image processing algorithms, and it's used to isolate specific regions for further analysis or diagnosis. In the context of the dataset we are working with, which involves brain MRI segmentation related to lower-grade gliomas, the colored areas indicate the presence and extent of tumors.
+
+
+
+
+
+
+
+
+
+
+
+
