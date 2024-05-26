@@ -1,4 +1,4 @@
-# Glioma Insight: Quantitative MRI Analysis and Genomic Correlation
+# Glioma Insight: Quantitative MRI Analysis and Genomic Correlation (Ongoing)
 
 **Dataset Overview:**
 The dataset consists of brain MRI images from patients diagnosed with lower-grade glioma. These images include manually created segmentation masks that highlight FLAIR abnormalities associated with the glioma. The dataset is derived from a larger collection housed in The Cancer Genome Atlas (TCGA) and has been utilized in research exploring the association between tumor genomic subtypes and morphological features extracted through deep learning algorithms. The MRI images are in `.tif` format, and each image has a corresponding segmentation mask indicating the region of interest (abnormal tissue).
